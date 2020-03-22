@@ -10,8 +10,10 @@ target/
 *.class
 *.info
 *.properties
+*.jar
 
-
+/1.JavaSyntax/
+/5.OnlineInternship/
 /out/
 /JavaRushPlugin.properties
 /Instruction.png
