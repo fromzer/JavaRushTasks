@@ -28,10 +28,12 @@ public class Solution {
             case ("-c"):
                 if (args[2].equals("м")) {
                     allPeople.add(Person.createMale(args[1], oldTime.parse(args[3])));
-                    System.out.println(allPeople.size() - 1); }
+                    System.out.println(allPeople.size() - 1);
+                }
                 else if (args[2].equals("ж")) {
                     allPeople.add(Person.createFemale(args[1], oldTime.parse(args[3])));
-                    System.out.println(allPeople.size() - 1); }
+                    System.out.println(allPeople.size() - 1);
+                }
                 break;
             case ("-u"):
                 if (args[3].equals("м"))
