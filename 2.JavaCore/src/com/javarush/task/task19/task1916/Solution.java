@@ -26,7 +26,7 @@ public class Solution {
             if (file2.ready()) {
                 lineFile2 = file2.readLine();
             }
-            
+
             if (lineFile1.equals(lineFile2)) {
                 lines.add(new LineItem(Type.SAME, lineFile1));
             } else if (lineFile1.equals("")) {
