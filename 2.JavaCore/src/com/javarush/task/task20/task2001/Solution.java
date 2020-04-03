@@ -12,7 +12,7 @@ public class Solution {
     public static void main(String[] args) {
         //исправьте outputStream/inputStream в соответствии с путем к вашему реальному файлу
         try {
-            File your_file_name = File.createTempFile("d:\\Fromzer\\3.txt", null);
+            File your_file_name = File.createTempFile("d:\\Fromzer\\1.txt", null);
             OutputStream outputStream = new FileOutputStream(your_file_name);
             InputStream inputStream = new FileInputStream(your_file_name);
 
@@ -24,6 +24,7 @@ public class Solution {
             somePerson.load(inputStream);
             inputStream.close();
             //check here that ivanov equals to somePerson - проверьте тут, что ivanov и somePerson равны
+            System.out.println(ivanov.equals(somePerson));
 
         } catch (IOException e) {
             //e.printStackTrace();
@@ -68,11 +69,29 @@ public class Solution {
 
         public void save(OutputStream outputStream) throws Exception {
             //implement this method - реализуйте этот метод
+            PrintWriter writer = new PrintWriter(outputStream);
+            if (this.name != null) {
+                writer.println(name);
+            }
 
+            if (!this.assets.isEmpty()) {
+                for (Asset asset : assets) {
+                    writer.println(asset.getName());
+                    writer.println(asset.getPrice());
+                }
+            }
+            writer.flush();
         }
 
         public void load(InputStream inputStream) throws Exception {
             //implement this method - реализуйте этот метод
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            this.name = reader.readLine();
+
+            while (reader.ready()) {
+                this.assets.add(new Asset(reader.readLine(), Double.parseDouble(reader.readLine())));
+            }
+            reader.close();
         }
     }
 }
