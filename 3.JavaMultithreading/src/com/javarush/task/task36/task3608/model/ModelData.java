@@ -6,6 +6,15 @@ import java.util.List;
 
 public class ModelData {
     private List<User> users;
+    private List<User> deletedUsers;
+
+    public List<User> getDeletedUsers() {
+        return deletedUsers;
+    }
+
+    public void setDeletedUsers(List<User> deletedUsers) {
+        this.deletedUsers = deletedUsers;
+    }
 
     public List<User> getUsers() {
         return users;
