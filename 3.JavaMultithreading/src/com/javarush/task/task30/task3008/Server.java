@@ -53,5 +53,13 @@ public class Server {
 
             return name;
         }
+
+        private void notifyUsers(Connection connection, String userName) throws IOException {
+            for (String name : connectionMap.keySet()) {
+                if (!name.equalsIgnoreCase(userName)) {
+                    connection.send(new Message(MessageType.USER_ADDED, name));
+                }
+            }
+        }
     }
 }
