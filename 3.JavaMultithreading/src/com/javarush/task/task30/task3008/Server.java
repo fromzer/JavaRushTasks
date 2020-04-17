@@ -29,11 +29,29 @@ public class Server {
             e.printStackTrace();
         }
     }
+
     private static class Handler extends Thread {
         private Socket socket;
 
         public Handler(Socket socket) {
             this.socket = socket;
+        }
+
+        private String serverHandshake(Connection connection) throws IOException, ClassNotFoundException {
+            Message messageOut = new Message(MessageType.NAME_REQUEST);
+            Message messageIn;
+            String name = null;
+
+            do {
+                connection.send(messageOut);
+                messageIn = connection.receive();
+                name = messageIn.getData();
+            } while (messageIn.getType() != MessageType.USER_NAME || name.isEmpty() || connectionMap.containsKey(name));
+
+            connectionMap.put(name, connection);
+            connection.send(new Message(MessageType.NAME_ACCEPTED));
+
+            return name;
         }
     }
 }
