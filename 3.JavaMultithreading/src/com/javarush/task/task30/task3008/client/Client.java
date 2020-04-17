@@ -53,6 +53,25 @@ public class Client {
     }
 
     public class SocketThread extends Thread {
+        public void run() {
+            Socket socket;
+            try {
+                socket = new Socket(getServerAddress(),getServerPort());
+                Connection connection = new Connection(socket);
+                Client.this.connection = connection;
+
+                clientHandshake();
+                clientMainLoop();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                notifyConnectionStatusChanged(false);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                notifyConnectionStatusChanged(false);
+            }
+        }
+
         protected void processIncomingMessage(String message) {
             ConsoleHelper.writeMessage(message);
         }
