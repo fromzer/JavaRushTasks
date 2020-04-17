@@ -38,7 +38,7 @@ public class Server {
         }
 
         private String serverHandshake(Connection connection) throws IOException, ClassNotFoundException {
-            Message messageOut = new Message(MessageType.NAME_REQUEST);
+            Message messageOut = new Message(MessageType.NAME_REQUEST, "Введите имя: ");
             Message messageIn;
             String name = null;
 
@@ -49,7 +49,7 @@ public class Server {
             } while (messageIn.getType() != MessageType.USER_NAME || name.isEmpty() || connectionMap.containsKey(name));
 
             connectionMap.put(name, connection);
-            connection.send(new Message(MessageType.NAME_ACCEPTED));
+            connection.send(new Message(MessageType.NAME_ACCEPTED, "Вы добавлены в чат!"));
 
             return name;
         }
@@ -69,18 +69,29 @@ public class Server {
                     String text = message.getData();
                     Server.sendBroadcastMessage(new Message(MessageType.TEXT, userName + ": " + text));
                 } else {
-                    ConsoleHelper.writeMessage("Errors");
+                    ConsoleHelper.writeMessage("Сообщение не является текстом");
                 }
             }
         }
 
-        public static void sendBroadcastMessage(Message message) {
-            for (Map.Entry<String, Connection> pair : connectionMap.entrySet()) {
-                try {
-                    pair.getValue().send(message);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
+        public void run() {
+            ConsoleHelper.writeMessage("Было установлено соединение с удаленным адресом: " + socket.getRemoteSocketAddress());
+
+            try (Connection connection = new Connection(socket)) {
+
+                String userName = serverHandshake(connection);
+
+                sendBroadcastMessage(new Message(MessageType.USER_ADDED, userName));
+                notifyUsers(connection, userName);
+                serverMainLoop(connection, userName);
+
+                connectionMap.remove(userName);
+                sendBroadcastMessage(new Message(MessageType.USER_REMOVED, userName));
+                ConsoleHelper.writeMessage("Соединение с удаленным адресом закрыто.");
+
+            } catch (IOException | ClassNotFoundException e) {
+                ConsoleHelper.writeMessage("Произошла ошибка при обмене данными с удаленным адресом.");
             }
         }
     }
