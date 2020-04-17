@@ -71,6 +71,56 @@ public class Client {
                 Client.this.notify();
             }
         }
+
+        protected void clientHandshake() throws IOException, ClassNotFoundException {
+            while (true) {
+                Message message = connection.receive();
+
+                if (message.getType() != MessageType.NAME_REQUEST
+                        && message.getType() != MessageType.NAME_ACCEPTED) {
+                    throw new IOException("Unexpected MessageType");
+                }
+
+                switch (message.getType()) {
+                    case NAME_REQUEST:
+                        connection.send(new Message(MessageType.USER_NAME, getUserName()));
+                        break;
+                    case NAME_ACCEPTED:
+                        notifyConnectionStatusChanged(true);
+                        return;
+                }
+            }
+        }
+
+        protected void clientMainLoop() throws IOException, ClassNotFoundException {
+            while (true) {
+                Message message;
+
+                try {
+                    message = connection.receive();
+                } catch (IOException e) {
+                    break;
+                }
+
+                if (message.getType() != MessageType.TEXT
+                        && message.getType() != MessageType.USER_ADDED
+                        && message.getType() != MessageType.USER_REMOVED) {
+                    throw new IOException("Unexpected MessageType");
+                }
+
+                switch (message.getType()) {
+                    case TEXT:
+                        processIncomingMessage(message.getData());
+                        break;
+                    case USER_ADDED:
+                        informAboutAddingNewUser(message.getData());
+                        break;
+                    case USER_REMOVED:
+                        informAboutDeletingNewUser(message.getData());
+                        break;
+                }
+            }
+        }
     }
 
     protected String getServerAddress() {
