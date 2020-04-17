@@ -142,19 +142,19 @@ public class Client {
         }
     }
 
-    protected String getServerAddress() {
+    protected String getServerAddress() throws IOException {
         ConsoleHelper.writeMessage("Введите адрес сервера:");
         serverAddress = ConsoleHelper.readString();
         return serverAddress;
     }
 
-    protected int getServerPort() {
+    protected int getServerPort() throws IOException {
         ConsoleHelper.writeMessage("Введите адрес порта сервера:");
         serverPort = ConsoleHelper.readInt();
         return serverPort;
     }
 
-    protected String getUserName() {
+    protected String getUserName() throws IOException {
         ConsoleHelper.writeMessage("Представьтесь:");
         userName = ConsoleHelper.readString();
         return userName;
