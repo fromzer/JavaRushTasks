@@ -8,46 +8,57 @@ import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.Charset;
 
-public class FileConsoleWriter extends  FileWriter{
+public class FileConsoleWriter {
     private FileWriter fileWriter;
 
     public FileConsoleWriter(String fileName) throws IOException {
-        super(fileName);
+        this.fileWriter = new FileWriter(fileName);
     }
 
     public FileConsoleWriter(String fileName, boolean append) throws IOException {
-        super(fileName, append);
+        this.fileWriter = new FileWriter(fileName, append);
     }
 
     public FileConsoleWriter(File file) throws IOException {
-        super(file);
+        this.fileWriter = new FileWriter(file);
     }
 
     public FileConsoleWriter(File file, boolean append) throws IOException {
-        super(file, append);
+        this.fileWriter = new FileWriter(file, append);
     }
 
-    public FileConsoleWriter(FileDescriptor fd) {
-        super(fd);
+    public FileConsoleWriter(FileDescriptor fileDescriptor) {
+        this.fileWriter = new FileWriter(fileDescriptor);
     }
 
-    public FileConsoleWriter(String fileName, Charset charset) throws IOException {
-        super(fileName, charset);
+    public void write(char[] cbuf, int off, int len) throws IOException {
+        fileWriter.write(cbuf, off, len);
+        System.out.println(new String((cbuf)).substring(off, off + len));
     }
 
-    public FileConsoleWriter(String fileName, Charset charset, boolean append) throws IOException {
-        super(fileName, charset, append);
+    public void write(int c) throws IOException {
+        fileWriter.write(c);
+        System.out.println(c);
+    }
+    public void write(String str) throws IOException {
+        fileWriter.write(str);
+        System.out.println(str);
     }
 
-    public FileConsoleWriter(File file, Charset charset) throws IOException {
-        super(file, charset);
+    public void write(String str, int off, int len) throws IOException {
+        fileWriter.write(str, off, len);
+        System.out.println(new String(str).substring(off, off + len));
+    }
+    public void write(char[] cbuf) throws IOException {
+        fileWriter.write(cbuf);
+        System.out.println(new String(cbuf));
     }
 
-    public FileConsoleWriter(File file, Charset charset, boolean append) throws IOException {
-        super(file, charset, append);
+    public void close() throws IOException {
+        fileWriter.close();
     }
+
 
     public static void main(String[] args) {
 
