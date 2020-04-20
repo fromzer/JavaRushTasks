@@ -5,51 +5,47 @@ package com.javarush.task.task18.task1827;
 */
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Solution {
     public static void main(String[] args) throws Exception {
-        int id = 0;
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        File path = new File(reader.readLine());
-        id = selectId(path);
-        if (args[0] != null) {
-            String productName = args[1].length() > 30? args[1].substring(0,30) : args[1];
-            while (productName.length() < 30) {
-                productName += " ";
-            }
-            String price = args[2].length() > 8? args[2].substring(0,8) : args[2];
-            while (price.length() < 8) {
-                price += " ";
-            }
-            String quantity = args[3].length() > 4? args[3].substring(0,4) :args[3];
-            while (quantity.length() < 4) {
-                quantity += " ";
-            }
-            id++;
-            String strId = id + "";
-            while (strId.length() < 8) {
-                strId += " ";
-            }
-            String resultStr ="\n" + strId + productName + price + quantity;
-            writeToFile(resultStr, path);
-        }
-        reader.close();
-    }
-    public static int selectId(File path) throws IOException {
-        int id = 0, maxId = 0;
-        BufferedReader fileReader = new BufferedReader(new FileReader(path));
+        String fileName = reader.readLine();
+        int maxID = 0;
+        BufferedReader fileReader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName)));
+        maxID = 0;
         while (fileReader.ready()) {
-            String str = fileReader.readLine();
-            String[] arrStr = str.split(" ");
-            id = Integer.parseInt(arrStr[0]);
-            if (id > maxId) maxId = id;
+            String someString = fileReader.readLine();
+
+            if (!someString.equals("")) {
+                String substringString = someString.substring(0, 8);
+                int id;
+                if (someString.contains(" ")) {
+                    id = Integer.parseInt(substringString.split(" ")[0]);
+                } else id = Integer.parseInt(someString);
+                if (id > maxID) maxID = id;
+            }
+        }
+
+
+        if (args.length != 0) {
+            if ((args[0].equals("-c"))) {
+                String productName = args[1];
+                double price = Double.parseDouble(args[2]);
+                int quantity = Integer.parseInt(args[3]);
+                int id = ++maxID;
+                String fullString = String.format("%n%-8d%-30s%-8.2f%-4d", id, productName, price, quantity);
+                byte[] buffer = fullString.getBytes();
+                OutputStream outputStream = new FileOutputStream(fileName, true);
+                outputStream.write(buffer);
+                outputStream.flush();
+                outputStream.close();
+            }
         }
         fileReader.close();
-        return id;
-    }
-    public static void writeToFile(String result, File path) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(path, true));
-        writer.write(result);
-        writer.close();
+        reader.close();
     }
 }
